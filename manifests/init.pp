@@ -4,6 +4,7 @@ class users (
     String $rootpw,
     Hash $users = {},
     Hash $groups = {},
+    Hash $directories = {},
     ){
 
     # Not present by default on Debian systems
@@ -36,5 +37,8 @@ class users (
 
     $users.each  |$u, $up| { users::user { $u: * => $userdefaults  + $up } }
     $groups.each |$g, $gp| { group       { $g: * => $groupdefaults + $gp } }
+
+    $dirdefaults = { 'ensure' => 'directory' }
+    $directories.each |$d, $dp| { file { $d: * => $dirdefaults + $dp } }
 
 }
