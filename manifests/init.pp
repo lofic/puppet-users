@@ -4,7 +4,7 @@ class users (
     String $rootpw,
     Hash $users = {},
     Hash $groups = {},
-    Hash $directories = {},
+    Hash $files = {},
     ){
 
     # Not present by default on Debian systems
@@ -38,7 +38,17 @@ class users (
     $users.each  |$u, $up| { users::user { $u: * => $userdefaults  + $up } }
     $groups.each |$g, $gp| { group       { $g: * => $groupdefaults + $gp } }
 
-    $dirdefaults = { 'ensure' => 'directory' }
-    $directories.each |$d, $dp| { file { $d: * => $dirdefaults + $dp } }
+    # files and folders only in /home
+    $files.each |$d, $dp| {
+          if has_key($dp, 'path') {
+              if $dp['path'] =~ /^\/home\// {
+                  file { $d: * => $dp }
+              }
+          } else {
+              if $d =~ /^\/home\// {
+                  file { $d: * => $dp }
+              }
+          }
+    }
 
 }
