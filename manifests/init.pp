@@ -2,7 +2,8 @@
 
 class users (
     String $rootpw,
-    Hash $users = {}
+    Hash $users = {},
+    Hash $groups = {},
     ){
 
     # Not present by default on Debian systems
@@ -31,6 +32,9 @@ class users (
         'shell'      => '/bin/bash',
     }
 
-    $users.each |$u, $p| { users::user { $u: * => $userdefaults + $p } }
+    $groupdefaults = { 'ensure' => 'present', }
+
+    $users.each  |$u, $up| { users::user { $u: * => $userdefaults  + $up } }
+    $groups.each |$g, $gp| { group       { $g: * => $groupdefaults + $gp } }
 
 }
