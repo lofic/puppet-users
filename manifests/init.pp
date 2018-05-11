@@ -38,15 +38,16 @@ class users (
     $users.each  |$u, $up| { users::user { $u: * => $userdefaults  + $up } }
     $groups.each |$g, $gp| { group       { $g: * => $groupdefaults + $gp } }
 
+    $fdefaults = { 'show_diff' => false }
     # files and folders only in /home
-    $files.each |$d, $dp| {
-          if has_key($dp, 'path') {
-              if $dp['path'] =~ /^\/home\// {
-                  file { $d: * => $dp }
+    $files.each |$f, $fp| {
+          if has_key($fp, 'path') {
+              if $fp['path'] =~ /^\/home\// {
+                  file { $f: * => $fdefaults + $fp }
               }
           } else {
-              if $d =~ /^\/home\// {
-                  file { $d: * => $dp }
+              if $f =~ /^\/home\// {
+                  file { $f: * => $fdefaults + $fp }
               }
           }
     }
