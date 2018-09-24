@@ -31,7 +31,7 @@ class users (
         'groups'     => [],
         'homeprefix' => '/home',
         'shell'      => '/bin/bash',
-        'passwd'     => '!!',
+        'password'   => '!!',
     }
 
     $groupdefaults = { 'ensure' => 'present', }
